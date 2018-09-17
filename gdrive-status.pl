@@ -97,13 +97,19 @@ sub print_status {
 
 # Main function.
 sub main {
-	my ($path) = @_;
 	my @files;
 	my $rest = "";
+	my $paths = "";
+
+	# Building a string for multiple paths.
+	foreach my $path (@_) {
+		$paths .= "\"$path\" ";
+	}
+	$paths =~ s/\s+$//;
 
 	# Fetch the data from Google.
 	print "Fetching data... ";
-	my $output = `drive diff -skip-content-check -base-local=true -depth=-1 "$path" 2>&1`;
+	my $output = `drive diff -skip-content-check -base-local=true -depth=-1 $paths 2>&1`;
 	print "done.\n";
 
 	# Check if nothing changed.
@@ -130,9 +136,9 @@ sub main {
 	}
 }
 
-if (scalar(@ARGV) == 1) {
+if (scalar(@ARGV) > 0) {
 	main(@ARGV);
 } else {
-	print "Please provide a path.\n";
+	print "Usage: $0 <path> ...\n";
 }
 
