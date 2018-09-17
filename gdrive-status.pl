@@ -101,9 +101,16 @@ sub main {
 	my @files;
 	my $rest = "";
 
+	# Fetch the data from Google.
 	print "Fetching data... ";
 	my $output = `drive diff -skip-content-check -base-local=true -depth=-1 "$path" 2>&1`;
 	print "done.\n";
+
+	# Check if nothing changed.
+	if ($output eq "") {
+		print "Everything is up-to-date.\n";
+		return;
+	}
 
 	# Loop through each line.
 	foreach my $line (split /[\r\n]+/, $output) {
